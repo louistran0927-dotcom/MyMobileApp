@@ -97,3 +97,25 @@ Release build (once debug succeeds):
 cd android && ./gradlew assembleRelease
 # APK: android/app/build/outputs/apk/release/app-release.apk (unsigned)
 ```
+
+## Android debug build (SUCCESS) — updated
+
+Command:
+```
+cd android && ./gradlew clean assembleDebug
+```
+Result: `BUILD SUCCESSFUL` (55s) after switching to NDK 26.1.10909125 and
+removing the unused `react-native-safe-area-context` dependency. APK produced at
+`android/app/build/outputs/apk/debug/app-debug.apk` (~117 MB).
+
+## Android release build (BLOCKED on this host)
+
+Command:
+```
+cd android && ./gradlew assembleRelease
+```
+Result: FAILED at `:app:createBundleReleaseJsAndAssets`. The Hermes compiler
+binary (`node_modules/hermes-compiler/hermesc/win64-bin/hermesc.exe`) is blocked
+by the host's Device Guard policy. This is a Windows security restriction, not
+a project issue; release (Hermes bytecode) builds succeed on CI (ubuntu-latest)
+and on hosts without Device Guard. Debug builds are unaffected.
