@@ -37,16 +37,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4. Install Android SDK, build tools, platform and NDK
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Accept Android licenses
-        run: yes | sdkmanager --licenses
-
+      # 4. Install Android SDK components (the SDK is preinstalled on ubuntu-latest;
+      # android-actions/setup-android@v3 is broken: it runs `sdkmanager tools`,
+      # a package that no longer exists)
       - name: Install SDK components
+        env:
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
-          sdkmanager --install "platforms;android-37" "build-tools;37.0.0" "ndk;26.1.10909125" "cmake;3.22.1"
+          SDKMANAGER="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -f "$SDKMANAGER" ]; then
+            SDKMANAGER=$(find "$ANDROID_SDK_ROOT/cmdline-tools" -name sdkmanager -type f | head -1)
+          fi
+          echo "Using sdkmanager: $SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses
+          "$SDKMANAGER" --install "platforms;android-37" "build-tools;37.0.0" "ndk;26.1.10909125" "cmake;3.22.1"
 
       # 5. Install JS dependencies
       - name: Install npm dependencies
