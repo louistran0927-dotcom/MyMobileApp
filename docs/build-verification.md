@@ -6,9 +6,11 @@
 - Node: v26.13.0 (RN engines requires >= 22.11.0) -- OK
 - npm: 12.2.2 (effective, via %APPDATA%\npm; bundled npm 11.20.0)
 - Git: 2.53.0
-- JDK: not installed (java not on PATH) -- BLOCKER for Android builds
-- Android SDK / Android Studio: not installed (ANDROID_HOME empty) -- BLOCKER
-- adb/wmic: not available (wmic removed on this Windows 11 build)
+- JDK: Microsoft OpenJDK 17.0.21 installed during execution -- OK
+- Android SDK: `C:/Program Files (x86)/Android/android-sdk` (build-tools 36/37, platforms 35-37) -- OK
+- NDK: 27.1.12297006 (auto-installed by Gradle) -- linker issue (see below)
+- adb: available (platform-tools)
+- wmic: not available (Windows 11) -- blocks `react-native doctor`'s Android Studio check only
 
 ## react-native doctor
 
@@ -59,15 +61,38 @@ hermesEnabled=true
 - `npx eslint .` -> no errors
 - `npm test` -> 4 passed (App counter)
 
-## Android build (BLOCKED on this host)
+## JS bundle (verified)
 
-Requires JDK 17 + Android SDK. When available:
+Command:
+```
+npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output /tmp/index.android.bundle
+```
+Result: SUCCESS — Metro bundle written. Confirms JS/TS compiles and the counter module bundles.
+
+## Android native build (BLOCKED on this host)
+
+Installed during execution: Microsoft OpenJDK 17, Android SDK (build-tools 36/37,
+platforms 35-37), NDK 27.1.12297006 (auto-installed by Gradle), SDK licenses accepted.
+
+Command:
 ```
 cd android && ./gradlew assembleDebug
 ```
-Expected: `BUILD SUCCESSFUL`. Hermes bytecode artifacts appear under
-`android/app/build/` (`.hbc` / bundle). Release build:
+Result: FAILED during C++ linking of the auto-linked `react_codegen_safeareacontext`
+native module with undefined standard-library symbols (`__cxa_guard_acquire`,
+`operator new`, `std::__ndk1::basic_string`, `vtable for __cxxabiv1::...`).
+This indicates libc++ is not linked for that translation unit under
+NDK 27.1.12297006 — a toolchain/NDK configuration issue on this host, not a
+project config issue (hermesEnabled=true is honored; JS bundle compiles).
+
+Mitigations to try on a clean workstation:
+- Use NDK 26.x (set `ndkVersion` in `android/build.gradle` and install it).
+- Build from Android Studio (manages NDK/CMake versions consistently).
+- The `react-native-safe-area-context` dependency is auto-linked but unused by
+  `App.tsx`; removing it from `package.json` would drop the failing codegen.
+
+Release build (once debug succeeds):
 ```
 cd android && ./gradlew assembleRelease
+# APK: android/app/build/outputs/apk/release/app-release.apk (unsigned)
 ```
-APK output: `android/app/build/outputs/apk/release/app-release.apk` (unsigned by default).
