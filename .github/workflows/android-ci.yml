@@ -27,7 +27,7 @@ jobs:
           java-version: '17'
 
       # 3. Cache Gradle dependencies and wrapper to speed up builds
-      - name: Cache Gradle Wrapper and Dependencies
+- name: Cache Gradle Wrapper and Dependencies
         uses: actions/cache@v4
         with:
           path: |
