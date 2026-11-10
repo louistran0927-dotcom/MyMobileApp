@@ -138,3 +138,30 @@ binary (`node_modules/hermes-compiler/hermesc/win64-bin/hermesc.exe`) is blocked
 by the host's Device Guard policy. This is a Windows security restriction, not
 a project issue; release (Hermes bytecode) builds succeed on CI (ubuntu-latest)
 and on hosts without Device Guard. Debug builds are unaffected.
+
+## Layout note: `gap` + percentage widths in a wrapping flex row
+
+On RN 0.88, combining `gap` with percentage item widths inside a
+`flexWrap: 'wrap'` row made every item take a line of its own: the home screen
+rendered four half-width cards in one column instead of a 2x2 grid, and the
+alphabet/numbers/colors/animals grids were equally broken. Use bottom margins on
+the items (with `justifyContent: 'space-between'`) instead of `gap` in wrapping
+grids. `gap` is fine in non-wrapping rows and columns. Verified on a Pixel 6 /
+Android 16 emulator by reading card bounds from `uiautomator dump`.
+
+## Running on an emulator
+
+- Two SDKs exist on this host. The build SDK is
+  `C:\Program Files (x86)\Android\android-sdk`; the Android Studio SDK at
+  `C:\Users\BEN\AppData\Local\Android\Sdk` holds the emulator and the system
+  images. Launch the emulator with both `ANDROID_HOME` and `ANDROID_SDK_ROOT`
+  pointing at the AppData SDK, or it fails with "Broken AVD system path".
+- Hardware acceleration: "Virtual Machine Platform" and "Hypervisor Platform"
+  are enabled, and Google's Android Emulator Hypervisor Driver
+  (`extras;google;Android_Emulator_Hypervisor_Driver`, installed by running its
+  `silent_install.bat`) provides acceleration without a reboot.
+- AVD `Medium_Phone_API_37.0` (Pixel 6 class, Android 17 / API 37, x86_64).
+- For live tweaking: run Metro (`npx react-native start`), install the debug APK
+  and run `adb reverse tcp:8081 tcp:8081`. JS edits hot-reload in the emulator.
+  Verify layouts with `adb shell uiautomator dump` and read the `bounds`
+  attributes instead of eyeballing screenshots.
