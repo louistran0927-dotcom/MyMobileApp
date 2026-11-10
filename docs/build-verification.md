@@ -85,13 +85,12 @@ This indicates libc++ is not linked for that translation unit under
 NDK 27.1.12297006 — a toolchain/NDK configuration issue on this host, not a
 project config issue (hermesEnabled=true is honored; JS bundle compiles).
 
-Mitigations to try on a clean workstation:
-- Use NDK 26.x (set `ndkVersion` in `android/build.gradle` and install it).
-- Build from Android Studio (manages NDK/CMake versions consistently).
-- The `react-native-safe-area-context` dependency was removed from `package.json`
-  (unused by `App.tsx`); it was the original failing codegen unit, but the
-  libc++ linking failure persists on react-native core codegen, confirming a
-  host toolchain issue rather than a project dependency issue.
+- Attempted mitigation: `externalNativeBuild { cmake { arguments "-DANDROID_STL=c++_shared" } }`
+  added to `defaultConfig` (also set `applicationId "com.hermesapp"` per user snippet).
+  Result: no change — the React Native Gradle Plugin already injects
+  `-DANDROID_STL=c++_shared` by default (see `NdkConfiguratorUtils.kt`), so the
+  libc++ linking failure is not resolved by this flag. Confirms a host
+  toolchain issue (NDK installation / CMake / environment), not project config.
 
 Release build (once debug succeeds):
 ```

@@ -79,11 +79,17 @@ android {
 
     namespace "com.mymobileapp"
     defaultConfig {
-        applicationId "com.mymobileapp"
+        applicationId "com.hermesapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
     }
     signingConfigs {
         debug {
