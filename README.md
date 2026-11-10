@@ -20,6 +20,10 @@ questions, first-try scoring, instant encouragement).
 Navigation: the in-app back button returns to the home screen, and on Android
 the hardware back button does the same instead of exiting the app.
 
+Everything is spoken aloud through Android's built-in TextToSpeech engine: letter
+names and their words, number words, colors, shapes, animal sounds, and every quiz
+prompt. Each quiz question also has a 🔊 button to hear the prompt again.
+
 ## Project layout
 
 ```

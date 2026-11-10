@@ -6,6 +6,7 @@ import { Quiz } from '../components/Quiz';
 import { Screen } from '../components/Screen';
 import { NUMBERS, type NumberInfo } from '../data/numbers';
 import { buildNumbersQuiz } from '../data/quiz';
+import { speak } from '../speech';
 import { theme } from '../theme';
 
 export function NumbersScreen({ onBack }: { onBack: () => void }) {
@@ -37,7 +38,10 @@ export function NumbersScreen({ onBack }: { onBack: () => void }) {
                 testID={`number-${item.value}`}
                 accessibilityRole="button"
                 accessibilityLabel={`Number ${item.value}`}
-                onPress={() => setSelected(item)}
+                onPress={() => {
+                  setSelected(item);
+                  speak(item.word);
+                }}
                 style={({ pressed }) => [
                   styles.cell,
                   selected?.value === item.value && styles.cellSelected,

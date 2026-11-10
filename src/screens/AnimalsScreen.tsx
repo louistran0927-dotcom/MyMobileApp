@@ -6,6 +6,7 @@ import { Quiz } from '../components/Quiz';
 import { Screen } from '../components/Screen';
 import { ANIMALS, type AnimalInfo } from '../data/animals';
 import { buildAnimalsQuiz } from '../data/quiz';
+import { speak } from '../speech';
 import { theme } from '../theme';
 
 export function AnimalsScreen({ onBack }: { onBack: () => void }) {
@@ -39,7 +40,10 @@ export function AnimalsScreen({ onBack }: { onBack: () => void }) {
                 testID={`animal-${animal.name}`}
                 accessibilityRole="button"
                 accessibilityLabel={animal.name}
-                onPress={() => setSelected(animal)}
+                onPress={() => {
+                  setSelected(animal);
+                  speak(`${animal.name} says ${animal.sound}`);
+                }}
                 style={({ pressed }) => [
                   styles.cell,
                   selected?.name === animal.name && styles.cellSelected,

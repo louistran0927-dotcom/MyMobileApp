@@ -6,6 +6,7 @@ import { Quiz } from '../components/Quiz';
 import { Screen } from '../components/Screen';
 import { ALPHABET, type LetterInfo } from '../data/alphabet';
 import { buildAlphabetQuiz } from '../data/quiz';
+import { speak } from '../speech';
 import { theme } from '../theme';
 
 export function AlphabetScreen({ onBack }: { onBack: () => void }) {
@@ -42,7 +43,10 @@ export function AlphabetScreen({ onBack }: { onBack: () => void }) {
                 testID={`letter-${item.letter}`}
                 accessibilityRole="button"
                 accessibilityLabel={`Letter ${item.letter}`}
-                onPress={() => setSelected(item)}
+                onPress={() => {
+                  setSelected(item);
+                  speak(`${item.letter} is for ${item.word}`);
+                }}
                 style={({ pressed }) => [
                   styles.cell,
                   selected?.letter === item.letter && styles.cellSelected,

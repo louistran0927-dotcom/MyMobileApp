@@ -91,6 +91,7 @@ export function buildNumbersQuiz(
     return {
       id: `numbers-${item.value}`,
       prompt: `How many ${item.emoji}?`,
+      spokenPrompt: `How many ${item.noun}?`,
       visual: item.emoji.repeat(item.value),
       options: [
         ...options.slice(rotation),

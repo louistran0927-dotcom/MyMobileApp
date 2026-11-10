@@ -7,6 +7,7 @@ import { Screen } from '../components/Screen';
 import { COLORS, type ColorInfo } from '../data/colors';
 import { buildColorsQuiz, buildShapesQuiz } from '../data/quiz';
 import { SHAPES, type ShapeInfo } from '../data/shapes';
+import { speak } from '../speech';
 import { theme } from '../theme';
 
 type Tab = 'colors' | 'shapes';
@@ -103,7 +104,10 @@ function ColorsLearn() {
             testID={`color-${color.name}`}
             accessibilityRole="button"
             accessibilityLabel={color.name}
-            onPress={() => setSelected(color)}
+            onPress={() => {
+              setSelected(color);
+              speak(color.name);
+            }}
             style={({ pressed }) => [
               styles.cell,
               pressed && styles.pressed,
@@ -143,7 +147,10 @@ function ShapesLearn() {
             testID={`shape-${shape.name}`}
             accessibilityRole="button"
             accessibilityLabel={shape.name}
-            onPress={() => setSelected(shape)}
+            onPress={() => {
+              setSelected(shape);
+              speak(shape.name);
+            }}
             style={({ pressed }) => [styles.cell, pressed && styles.pressed]}>
             <Text style={styles.cellEmoji}>{shape.emoji}</Text>
             <Text style={styles.cellLabel}>{shape.name}</Text>

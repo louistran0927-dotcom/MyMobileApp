@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { speak, stopSpeaking } from '../speech';
 import { theme } from '../theme';
 
 export type QuizOption = {
@@ -12,6 +13,8 @@ export type QuizOption = {
 export type QuizQuestion = {
   id: string;
   prompt: string;
+  /** Spoken version of the prompt, when the visible prompt contains emoji. */
+  spokenPrompt?: string;
   visual?: string;
   options: QuizOption[];
   answerId: string;
@@ -41,12 +44,26 @@ export function Quiz({ questions }: Props) {
 
   const question = questions[index];
   const isLast = index === questions.length - 1;
+  const spokenPrompt = question.spokenPrompt ?? question.prompt;
+
+  useEffect(() => {
+    speak(spokenPrompt);
+  }, [spokenPrompt]);
+
+  useEffect(() => () => stopSpeaking(), []);
+
+  useEffect(() => {
+    if (stage === 'done') {
+      speak(`You scored ${score} out of ${questions.length}`);
+    }
+  }, [stage, score, questions.length]);
 
   const pick = (optionId: string) => {
     if (stage !== 'answering') {
       return;
     }
     if (optionId === question.answerId) {
+      speak('Great job!');
       if (!madeMistake) {
         setScore(s => s + 1);
       }
@@ -112,9 +129,23 @@ export function Quiz({ questions }: Props) {
         <Text style={styles.progress}>
           {`Question ${index + 1} of ${questions.length}`}
         </Text>
-        <Text testID="quiz-prompt" style={styles.prompt}>
-          {question.prompt}
-        </Text>
+        <View style={styles.promptRow}>
+          <Text testID="quiz-prompt" style={styles.prompt}>
+            {question.prompt}
+          </Text>
+          <Pressable
+            testID="quiz-speak"
+            accessibilityRole="button"
+            accessibilityLabel="Hear the question"
+            onPress={() => speak(spokenPrompt)}
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.speakButton,
+              pressed && styles.pressed,
+            ]}>
+            <Text style={styles.speakIcon}>🔊</Text>
+          </Pressable>
+        </View>
         {question.visual ? (
           <Text testID="quiz-visual" style={styles.visual}>
             {question.visual}
@@ -198,12 +229,30 @@ const styles = StyleSheet.create({
     color: theme.colors.textMuted,
     fontWeight: '700',
   },
+  promptRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    width: '100%',
+    marginTop: theme.spacing.xs,
+  },
   prompt: {
+    flex: 1,
     fontSize: theme.font.heading,
     fontWeight: '900',
     color: theme.colors.text,
     textAlign: 'center',
-    marginTop: theme.spacing.xs,
+  },
+  speakButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: theme.colors.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  speakIcon: {
+    fontSize: 22,
   },
   visual: {
     fontSize: 48,

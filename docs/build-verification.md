@@ -69,6 +69,19 @@ npx react-native bundle --platform android --dev false --entry-file index.js --b
 ```
 Result: SUCCESS — Metro bundle written. Confirms JS/TS compiles and the counter module bundles.
 
+## Spoken audio (TextToSpeech)
+
+A small legacy native module (`SpeechModule.kt` + `SpeechPackage.kt`, registered
+in `MainApplication.kt`) exposes `speak(text)` / `stop()` to JS through
+`src/speech.ts`. It uses Android's built-in TextToSpeech engine at 0.75x rate,
+so no audio assets are needed.
+
+On the new architecture the module is registered through the legacy interop
+layer; `createNativeModules` is deprecated there, so the override carries
+`@Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")`. JS degrades to a no-op when
+`NativeModules.Speech` is absent, which keeps the Jest suite and any non-Android
+platform working.
+
 ## Android native build (SUCCESS after AGP 9 configuration fix)
 
 The earlier libc++ linking failure was traced to a hand-modified
