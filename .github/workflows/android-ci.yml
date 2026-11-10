@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: 'npm'
 
       # 2. Set up Java (JDK 17 is required for modern React Native)
@@ -37,13 +37,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4. Install Android SDK & Ensure NDK is available
-      - name: Install Android SDK Components & NDK
+      # 4. Install Android SDK, build tools, platform and NDK
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install specific NDK version (Matching your gradle.properties)
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses
+
+      - name: Install SDK components
         run: |
-          sdkmanager "ndk;26.1.10909125" # Update this version to match your project's exact NDK requirement
+          sdkmanager --install "platforms;android-37" "build-tools;37.0.0" "ndk;26.1.10909125" "cmake;3.22.1"
 
       # 5. Install JS dependencies
       - name: Install npm dependencies
@@ -55,3 +58,11 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
+
+      # 7. Upload the APK so it can be downloaded from the run summary
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
