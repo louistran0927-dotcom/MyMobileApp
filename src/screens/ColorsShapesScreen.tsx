@@ -224,7 +224,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: theme.spacing.sm,
   },
   cell: {
     width: '31%',
@@ -234,6 +233,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: theme.spacing.md,
     gap: theme.spacing.xs,
+    marginBottom: theme.spacing.sm,
   },
   swatch: {
     width: 48,

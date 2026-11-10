@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: theme.spacing.sm,
   },
   cell: {
     width: '23%',
@@ -112,6 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.card,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: theme.spacing.sm,
   },
   cellSelected: {
     backgroundColor: theme.colors.yellow,

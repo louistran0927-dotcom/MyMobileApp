@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 160,
+    marginBottom: theme.spacing.md,
   },
   pressed: {
     opacity: 0.75,
