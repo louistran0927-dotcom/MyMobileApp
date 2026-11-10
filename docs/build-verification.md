@@ -88,8 +88,10 @@ project config issue (hermesEnabled=true is honored; JS bundle compiles).
 Mitigations to try on a clean workstation:
 - Use NDK 26.x (set `ndkVersion` in `android/build.gradle` and install it).
 - Build from Android Studio (manages NDK/CMake versions consistently).
-- The `react-native-safe-area-context` dependency is auto-linked but unused by
-  `App.tsx`; removing it from `package.json` would drop the failing codegen.
+- The `react-native-safe-area-context` dependency was removed from `package.json`
+  (unused by `App.tsx`); it was the original failing codegen unit, but the
+  libc++ linking failure persists on react-native core codegen, confirming a
+  host toolchain issue rather than a project dependency issue.
 
 Release build (once debug succeeds):
 ```
