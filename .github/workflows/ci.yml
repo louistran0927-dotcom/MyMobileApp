@@ -28,6 +28,7 @@ jobs:
           java-version: '17'
 
       - name: Install Dependencies
+        timeout-minutes: 10
         run: npm ci
 
       - name: Run Linter
