@@ -1,3 +1,5 @@
+[![CI / React Native Build & Test](https://github.com/louistran0927-dotcom/MyMobileApp/actions/workflows/ci.yml/badge.svg)](https://github.com/louistran0927-dotcom/MyMobileApp/actions/workflows/ci.yml)
+
 # MyMobileApp
 
 React Native (TypeScript) app with Hermes bytecode compilation enabled.
