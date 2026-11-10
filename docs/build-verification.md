@@ -8,7 +8,7 @@
 - Git: 2.53.0
 - JDK: Microsoft OpenJDK 17.0.21 installed during execution -- OK
 - Android SDK: `C:/Program Files (x86)/Android/android-sdk` (build-tools 36/37, platforms 35-37) -- OK
-- NDK: 27.1.12297006 (auto-installed by Gradle) -- linker issue (see below)
+- NDK: 26.1.10909125 and 27.1.12297006 installed; 26.1.10909125 is the working version for debug builds
 - adb: available (platform-tools)
 - wmic: not available (Windows 11) -- blocks `react-native doctor`'s Android Studio check only
 
@@ -59,7 +59,7 @@ hermesEnabled=true
 
 - `npx tsc --noEmit` -> no errors
 - `npx eslint .` -> no errors
-- `npm test` -> 4 passed (App counter)
+- `npm test` -> 18 passed (Kids Learning app and quiz engine)
 
 ## JS bundle (verified)
 
@@ -69,28 +69,38 @@ npx react-native bundle --platform android --dev false --entry-file index.js --b
 ```
 Result: SUCCESS — Metro bundle written. Confirms JS/TS compiles and the counter module bundles.
 
-## Android native build (BLOCKED on this host)
+## Android native build (SUCCESS after AGP 9 configuration fix)
 
-Installed during execution: Microsoft OpenJDK 17, Android SDK (build-tools 36/37,
-platforms 35-37), NDK 27.1.12297006 (auto-installed by Gradle), SDK licenses accepted.
+The earlier libc++ linking failure was traced to a hand-modified
+`android/app/build.gradle` (wrong `namespace`/`applicationId` `com.yourapp`,
+`compileSdkVersion 34`, an invalid `entryFile` expression) combined with
+Gradle 9.4.1 / AGP 9.2.1.
+
+Two AGP 9 requirements fixed it:
+
+1. `app/build.gradle` must NOT apply `org.jetbrains.kotlin.android`. AGP 9
+   registers the `kotlin` extension itself, so applying the Kotlin plugin as
+   well fails with `Cannot add extension with name 'kotlin'`. AGP's built-in
+   Kotlin compiles `MainActivity.kt` / `MainApplication.kt`.
+2. `compileSdkVersion <value>` was removed in AGP 9; the template already uses
+   the supported `compileSdk rootProject.ext.compileSdkVersion`.
+
+The template file was restored from the initial scaffold commit
+(`git checkout <initial-commit> -- android/app/build.gradle`) and only the
+Kotlin plugin line was dropped. `namespace`/`applicationId` are
+`com.mymobileapp`, matching `android/app/src/main/java/com/mymobileapp/`.
+
+Stale generated code survives `gradlew clean` because it lives in the root
+project build dir: if `ReactNativeApplicationEntryPoint.java` references an old
+package, delete `android/build` and rebuild.
 
 Command:
 ```
-cd android && ./gradlew assembleDebug
+cd android && ./gradlew assembleDebug --no-daemon
 ```
-Result: FAILED during C++ linking of the auto-linked `react_codegen_safeareacontext`
-native module with undefined standard-library symbols (`__cxa_guard_acquire`,
-`operator new`, `std::__ndk1::basic_string`, `vtable for __cxxabiv1::...`).
-This indicates libc++ is not linked for that translation unit under
-NDK 27.1.12297006 — a toolchain/NDK configuration issue on this host, not a
-project config issue (hermesEnabled=true is honored; JS bundle compiles).
-
-- Attempted mitigation: `externalNativeBuild { cmake { arguments "-DANDROID_STL=c++_shared" } }`
-  added to `defaultConfig` (also set `applicationId "com.hermesapp"` per user snippet).
-  Result: no change — the React Native Gradle Plugin already injects
-  `-DANDROID_STL=c++_shared` by default (see `NdkConfiguratorUtils.kt`), so the
-  libc++ linking failure is not resolved by this flag. Confirms a host
-  toolchain issue (NDK installation / CMake / environment), not project config.
+Result: `BUILD SUCCESSFUL` (~50s). APK at
+`android/app/build/outputs/apk/debug/app-debug.apk`, `package: com.mymobileapp`,
+`application-label: 'Kids Learning'`.
 
 Release build (once debug succeeds):
 ```
@@ -98,15 +108,11 @@ cd android && ./gradlew assembleRelease
 # APK: android/app/build/outputs/apk/release/app-release.apk (unsigned)
 ```
 
-## Android debug build (SUCCESS) — updated
+## Android debug build (historical)
 
-Command:
-```
-cd android && ./gradlew clean assembleDebug
-```
-Result: `BUILD SUCCESSFUL` (55s) after switching to NDK 26.1.10909125 and
-removing the unused `react-native-safe-area-context` dependency. APK produced at
-`android/app/build/outputs/apk/debug/app-debug.apk` (~117 MB).
+An earlier `gradlew clean assembleDebug` succeeded (55s) with NDK 26.1.10909125
+after removing the unused `react-native-safe-area-context` dependency. Debug
+APKs are large (~117 MB) because they package all four ABIs.
 
 ## Android release build (BLOCKED on this host)
 
