@@ -31,6 +31,9 @@ jobs:
         timeout-minutes: 10
         run: npm ci
 
+      - name: Apply AGP 9 compatibility patch to react-native-vision-camera
+        run: node scripts/patch-vision-camera.js
+
       - name: Run Linter
         run: npm run lint
 

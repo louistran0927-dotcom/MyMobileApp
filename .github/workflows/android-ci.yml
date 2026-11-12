@@ -52,6 +52,9 @@ jobs:
           yes | "$SDKMANAGER" --licenses
           "$SDKMANAGER" --install "platforms;android-37.0" "build-tools;37.0.0" "ndk;26.1.10909125" "cmake;3.22.1"
 
+      - name: Apply AGP 9 compatibility patch to react-native-vision-camera
+        run: npm ci && node scripts/patch-vision-camera.js
+
       # 5. Install JS dependencies
       - name: Install npm dependencies
         run: npm ci

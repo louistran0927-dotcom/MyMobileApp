@@ -17,13 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const vcPath = path.resolve(
-  __dirname,
-  'node_modules',
-  'react-native-vision-camera',
-  'android',
-  'build.gradle'
-);
+// Project root = parent of the scripts/ directory
+const projectRoot = path.resolve(__dirname, '..');
+const vcPath = path.resolve(projectRoot, 'node_modules', 'react-native-vision-camera', 'android', 'build.gradle');
 
 if (!fs.existsSync(vcPath)) {
   // Not installed yet (e.g. --ignore-scripts). Nothing to patch.
