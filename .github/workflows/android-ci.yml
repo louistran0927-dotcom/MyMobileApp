@@ -55,11 +55,7 @@ jobs:
       - name: Apply AGP 9 compatibility patch to react-native-vision-camera
         run: npm ci && node scripts/patch-vision-camera.js
 
-      # 5. Install JS dependencies
-      - name: Install npm dependencies
-        run: npm ci
-
-      # 6. Build Android Release APK / Bundle
+      # 5. Build Android Release APK / Bundle
       - name: Build Android Release
         working-directory: android
         run: |
