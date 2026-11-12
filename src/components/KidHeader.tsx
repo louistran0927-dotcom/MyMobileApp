@@ -14,7 +14,7 @@ export function KidHeader({ title, onBack }: Props) {
         accessibilityRole="button"
         accessibilityLabel="Go back"
         onPress={onBack}
-        hitSlop={12}
+        hitSlop={16}
         style={styles.back}>
         <Text style={styles.backIcon}>‹</Text>
       </Pressable>
@@ -30,26 +30,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
+    paddingVertical: theme.spacing.md,
     gap: theme.spacing.sm,
   },
   back: {
-    width: 44,
-    height: 44,
-    borderRadius: theme.radius.sm,
+    width: 56,
+    height: 56,
+    borderRadius: theme.radius.md,
     backgroundColor: theme.colors.card,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: theme.colors.textMuted,
   },
   backIcon: {
-    fontSize: 30,
-    lineHeight: 34,
-    fontWeight: '700',
+    fontSize: 38,
+    lineHeight: 42,
+    fontWeight: '900',
     color: theme.colors.text,
   },
   title: {
     fontSize: theme.font.heading,
-    fontWeight: '800',
+    fontWeight: '900',
     color: theme.colors.text,
   },
 });

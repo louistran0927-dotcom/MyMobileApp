@@ -54,25 +54,28 @@ const styles = StyleSheet.create({
   },
   modeButton: {
     flex: 1,
-    minHeight: 48,
+    minHeight: 64,
     borderRadius: theme.radius.pill,
     backgroundColor: theme.colors.card,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: theme.colors.textMuted,
   },
   modeButtonActive: {
     backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
   modeText: {
     fontSize: theme.font.body,
-    fontWeight: '800',
+    fontWeight: '900',
     color: theme.colors.text,
   },
   modeTextActive: {
     color: '#FFFFFF',
   },
   pressed: {
-    opacity: 0.75,
-    transform: [{ scale: 0.98 }],
+    opacity: 0.85,
+    transform: [{ scale: 0.96 }],
   },
 });

@@ -5,6 +5,8 @@ import { AlphabetScreen } from './src/screens/AlphabetScreen';
 import { NumbersScreen } from './src/screens/NumbersScreen';
 import { ColorsShapesScreen } from './src/screens/ColorsShapesScreen';
 import { AnimalsScreen } from './src/screens/AnimalsScreen';
+import { DinosaursScreen } from './src/screens/DinosaursScreen';
+import { CameraScreen } from './src/screens/CameraScreen';
 
 export default function App() {
   const [tool, setTool] = useState<ToolId | null>(null);
@@ -35,6 +37,12 @@ export default function App() {
   }
   if (tool === 'animals') {
     return <AnimalsScreen onBack={goHome} />;
+  }
+  if (tool === 'dinosaurs') {
+    return <DinosaursScreen onBack={goHome} />;
+  }
+  if (tool === 'camera') {
+    return <CameraScreen onBack={goHome} />;
   }
   return <HomeScreen onSelect={setTool} />;
 }

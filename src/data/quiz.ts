@@ -2,6 +2,7 @@ import type { QuizQuestion } from '../components/Quiz';
 import { ALPHABET } from './alphabet';
 import { ANIMALS } from './animals';
 import { COLORS } from './colors';
+import { DINOSAURS } from './dinosaurs';
 import { NUMBERS } from './numbers';
 import { SHAPES } from './shapes';
 
@@ -174,6 +175,33 @@ export function buildAnimalsQuiz(
     return {
       id: `animals-${item.name}`,
       prompt: `Which animal says ${item.sound}?`,
+      options: [
+        ...options.slice(rotation),
+        ...options.slice(0, rotation),
+      ],
+      answerId: item.name,
+    };
+  });
+}
+
+export function buildDinosaursQuiz(
+  count: number = QUIZ_LENGTH,
+  seed: number = 20260115,
+): QuizQuestion[] {
+  const pool = shuffle(DINOSAURS, seed);
+  return pool.slice(0, count).map((item, i) => {
+    const others = DINOSAURS.filter(d => d.name !== item.name);
+    const first = others[(i * 2 + 1) % others.length];
+    const second = others[(i * 2 + 3) % others.length];
+    const options = [first, item, second].map(d => ({
+      id: d.name,
+      label: d.name,
+      emoji: d.emoji,
+    }));
+    const rotation = i % options.length;
+    return {
+      id: `dinosaurs-${item.name}`,
+      prompt: `Tap the ${item.name}`,
       options: [
         ...options.slice(rotation),
         ...options.slice(0, rotation),

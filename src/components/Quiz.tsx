@@ -215,8 +215,8 @@ export function Quiz({ questions }: Props) {
 
 const styles = StyleSheet.create({
   content: {
-    padding: theme.spacing.md,
-    paddingBottom: theme.spacing.xl,
+    padding: theme.spacing.lg,
+    paddingBottom: theme.spacing.xxl,
   },
   card: {
     backgroundColor: theme.colors.card,
@@ -244,15 +244,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   speakButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: theme.colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
   speakIcon: {
-    fontSize: 22,
+    fontSize: 28,
   },
   visual: {
     fontSize: 48,
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.md,
   },
   option: {
-    minHeight: 64,
+    minHeight: 88,
     borderRadius: theme.radius.md,
     backgroundColor: theme.colors.background,
     alignItems: 'center',
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
   optionLabel: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '800',
     color: theme.colors.text,
   },
@@ -305,8 +305,8 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.sm,
     backgroundColor: theme.colors.primary,
     borderRadius: theme.radius.pill,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.xxl,
   },
   nextText: {
     color: '#FFFFFF',
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.lg,
     backgroundColor: theme.colors.teal,
     borderRadius: theme.radius.pill,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.xxl,
   },
   restartText: {
     color: '#FFFFFF',

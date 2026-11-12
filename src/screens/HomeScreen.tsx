@@ -3,7 +3,13 @@ import { Screen } from '../components/Screen';
 import { ToolCard } from '../components/ToolCard';
 import { theme } from '../theme';
 
-export type ToolId = 'alphabet' | 'numbers' | 'colors' | 'animals';
+export type ToolId =
+  | 'alphabet'
+  | 'numbers'
+  | 'colors'
+  | 'animals'
+  | 'dinosaurs'
+  | 'camera';
 
 type Tool = {
   id: ToolId;
@@ -42,6 +48,20 @@ const TOOLS: Tool[] = [
     subtitle: 'Meet friendly animals',
     color: theme.colors.orange,
   },
+  {
+    id: 'dinosaurs',
+    emoji: '🦖',
+    title: 'Dinosaurs',
+    subtitle: 'Meet the dinosaurs',
+    color: theme.colors.red,
+  },
+  {
+    id: 'camera',
+    emoji: '📷',
+    title: "What's this?",
+    subtitle: 'Point the camera and ask',
+    color: theme.colors.blue,
+  },
 ];
 
 export function HomeScreen({
@@ -76,8 +96,8 @@ export function HomeScreen({
 
 const styles = StyleSheet.create({
   content: {
-    padding: theme.spacing.md,
-    paddingBottom: theme.spacing.xl,
+    padding: theme.spacing.lg,
+    paddingBottom: theme.spacing.xxl,
   },
   title: {
     fontSize: theme.font.title,
@@ -89,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: theme.font.body,
     color: theme.colors.textMuted,
     textAlign: 'center',
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
   },
   grid: {
     flexDirection: 'row',

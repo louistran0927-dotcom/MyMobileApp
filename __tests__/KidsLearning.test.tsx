@@ -121,6 +121,38 @@ describe('Kids Learning app', () => {
     expect(getByTestId('quiz-feedback')).toHaveTextContent(/Great job!/);
   });
 
+  it('shows the home screen with six learning tools', async () => {
+    const { getByTestId } = await render(<App />);
+    expect(getByTestId('tool-dinosaurs')).toBeTruthy();
+    expect(getByTestId('tool-camera')).toBeTruthy();
+  });
+
+  it('opens Dinosaurs and shows a dinosaur detail', async () => {
+    const { getByTestId, getByText } = await render(<App />);
+    await fireEvent.press(getByTestId('tool-dinosaurs'));
+    expect(getByTestId('screen-title')).toHaveTextContent('Dinosaurs');
+    await fireEvent.press(getByTestId('dinosaur-Tyrannosaurus-Rex'));
+    expect(getByTestId('dinosaur-detail-name')).toHaveTextContent(
+      'Tyrannosaurus Rex',
+    );
+    expect(getByTestId('dinosaur-detail-fact')).toHaveTextContent(
+      /banana-sized teeth/,
+    );
+    expect(getByTestId('dinosaur-detail-sound')).toHaveTextContent(
+      'It goes "Roar!"!',
+    );
+  });
+
+  it('plays the Dinosaurs quiz and taps the asked dinosaur', async () => {
+    const { getByTestId } = await render(<App />);
+    await fireEvent.press(getByTestId('tool-dinosaurs'));
+    await fireEvent.press(getByTestId('mode-quiz'));
+    const prompt = String(getByTestId('quiz-prompt').props.children);
+    const name = prompt.replace('Tap the ', '');
+    await fireEvent.press(getByTestId(`quiz-option-${name}`));
+    expect(getByTestId('quiz-feedback')).toHaveTextContent(/Great job!/);
+  });
+
   it('returns home from a tool with the back button', async () => {
     const { getByTestId, queryByTestId } = await render(<App />);
     await fireEvent.press(getByTestId('tool-alphabet'));
