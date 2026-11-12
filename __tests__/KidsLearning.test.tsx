@@ -128,7 +128,7 @@ describe('Kids Learning app', () => {
   });
 
   it('opens Dinosaurs and shows a dinosaur detail', async () => {
-    const { getByTestId, getByText } = await render(<App />);
+    const { getByTestId } = await render(<App />);
     await fireEvent.press(getByTestId('tool-dinosaurs'));
     expect(getByTestId('screen-title')).toHaveTextContent('Dinosaurs');
     await fireEvent.press(getByTestId('dinosaur-Tyrannosaurus-Rex'));

@@ -3,7 +3,6 @@
 // native camera module. Replace this with a real implementation when the app
 // is built on a device/emulator.
 import React from 'react';
-import { View } from 'react-native';
 
 export const CameraPermissionStatus = {
   authorized: 'authorized',

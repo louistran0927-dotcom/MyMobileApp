@@ -13,7 +13,7 @@ export type Identification = {
   source: 'model' | 'placeholder';
 };
 
-async function runClassifier(uri: string): Promise<Identification> {
+async function runClassifier(_uri: string): Promise<Identification> {
   // TODO: replace with a real image classifier using `uri` (file:// photo path).
   return {
     label: "I'm not sure yet",
